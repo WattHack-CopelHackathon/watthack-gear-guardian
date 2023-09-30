@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "gear-guardian"
+version = "0.1.0"
+description = "A YoLo real time helmet detector"
+authors = ["Pablo <PabloASHugen@protonmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+gear_guardian_cli = 'gear_guardian_cli:main'
+gear_guardian = 'gear_guardian_gui:main'

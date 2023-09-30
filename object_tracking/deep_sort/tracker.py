@@ -76,7 +76,7 @@ class Tracker:
                 self.kf, detections[detection_idx])
             if self.tracks[track_idx].time_since_without_helmet > self.n_alert \
                     and not self.tracks[track_idx].alert_raised:
-                self.tracks[track_idx].message = strftime("%d-%m-%Y %H:%M:%S", localtime())+" Person without helmet detected\n"
+                self.tracks[track_idx].message = strftime("%d-%m-%Y %H:%M:%S", localtime())+" Pessoa sem capacete detectada\n"
                 self.tracks[track_idx].alert_raised = True
 
         for track_idx in unmatched_tracks:

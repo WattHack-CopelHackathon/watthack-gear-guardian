@@ -18,31 +18,23 @@ from object_tracking.application_util import generate_detections as gdet
 from utils.bbox import draw_box_with_id
 
 import warnings
-
 warnings.filterwarnings("ignore")
 
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
-from multiprocessing import Queue
-from gui_2cam import App
-
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 tf.keras.backend.set_session(tf.Session(config=config))
 
-
 def _main_(args):
-    app = App()
     config_path = args.conf
     num_cam = int(args.count)
 
     with open(config_path) as config_buffer:
         config = json.load(config_buffer)
 
-    # makedirs(output_path)
-
-    net_h, net_w = 416, 416  # a multiple of 32, the smaller the faster
+    net_h, net_w = 416, 416
     obj_thresh, nms_thresh = 0.5, 0.45
 
     os.environ['CUDA_VISIBLE_DEVICES'] = config['train']['gpus']
@@ -69,8 +61,6 @@ def _main_(args):
 
     batch_size = num_cam
     images = []
-    values = []
-    messages = []
     while True:
         for i in range(num_cam):
             ret_val, image = video_readers[i].read()
@@ -82,17 +72,14 @@ def _main_(args):
                                          nms_thresh)
 
             for i in range(len(images)):
-                boxs = [[box1.xmin, box1.ymin, box1.xmax - box1.xmin, box1.ymax - box1.ymin] for box1 in batch_boxes[i]]
+                boxs = [[box1.xmin,box1.ymin,box1.xmax-box1.xmin, box1.ymax-box1.ymin] for box1 in batch_boxes[i]]
                 features = encoder(images[i], boxs)
-                message = ""
-                # print(features)
-                # score to 1.0 here).
+
                 detections = []
                 for j in range(len(boxs)):
                     label = batch_boxes[i][j].label
-                    detections.append(Detection(boxs[j], batch_boxes[i][j].c, features[j], label))
+                    detections.append(Detection(boxs[j], batch_boxes[i][j].c, features[j],label))
 
-                # Call the tracker
                 trackers[i].predict()
                 trackers[i].update(detections)
 
@@ -100,8 +87,6 @@ def _main_(args):
                 n_with_helmet = 0
 
                 for track in trackers[i].tracks:
-                    message+=track.message
-                    track.message=""
                     if not track.is_confirmed() or track.time_since_update > 1:
                         continue
                     if track.label == 2:
@@ -109,19 +94,22 @@ def _main_(args):
                     if track.label == 1:
                         n_with_helmet += 1
                     bbox = track.to_tlbr()
+                    # print(track.track_id,"+",track.label)
                     draw_box_with_id(images[i], bbox, track.track_id, track.label, config['model']['labels'])
 
-                messages.append(message)
-                values.append(n_with_helmet)
-                values.append(n_without_helmet)
-            app.update(images, values,messages)
-            values = []
+                # for det in detections:
+                #     print(det.label)
+                #     bbox = det.to_tlbr()
+                #     cv2.rectangle(images[i], (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (255, 0, 0), 2)
+                
+                print("CAM "+str(i))
+                print("Pessoas sem capacete  = " + str(n_without_helmet))
+                print("Pessoas com capacete  = " + str(n_with_helmet))
+                cv2.imshow('Cam'+str(i), images[i])
             images = []
-            messages = []
         if cv2.waitKey(1) == 27:
-            break
+            break  # esc to quit
     cv2.destroyAllWindows()
-
 
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='Predict with a trained yolo model')

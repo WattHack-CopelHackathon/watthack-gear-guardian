@@ -198,5 +198,5 @@ class Track:
         return self.state == TrackState.Deleted
 
     def now_wearing_helmet(self):
-        self.message = strftime("%d-%m-%Y %H:%M:%S", localtime())+" A person has now worn helmet\n"
+        self.message = strftime("%d-%m-%Y %H:%M:%S", localtime())+" Uma pessoa vestiu um capacete\n"
 
