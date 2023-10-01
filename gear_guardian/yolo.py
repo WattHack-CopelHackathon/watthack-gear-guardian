@@ -2,7 +2,7 @@ from keras.layers import Conv2D, Input, BatchNormalization, LeakyReLU, ZeroPaddi
 from keras.layers.merge import add, concatenate
 from keras.models import Model
 from keras.engine.topology import Layer
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 
 class YoloLayer(Layer):
     def __init__(self, anchors, max_grid, batch_size, warmup_batches, ignore_thresh, 

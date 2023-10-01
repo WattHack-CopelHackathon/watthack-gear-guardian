@@ -42,14 +42,14 @@ class App(threading.Thread):
         self.messages1 = tk.Text(self.root, bd=5, relief=tk.RIDGE)
         self.messages1.place(x=710, y=800, width=500, height=180)
 
-        img = cv2.imread('no_signal.jpg', 1)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = Image.fromarray(img)
-        img = ImageTk.PhotoImage(image=img)
+        # img = cv2.imread('no_signal.jpg', 1)
+        # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # img = Image.fromarray(img)
+        # img = ImageTk.PhotoImage(image=img)
 
-        self.panel1 = tk.Label(image=img)
-        self.panel1.image = img
-        self.panel1.place(x=710, y=10)
+        # self.panel1 = tk.Label(image=img)
+        # self.panel1.image = img
+        # self.panel1.place(x=700, y=10)
 
         quit_btn = tk.Button(self.root, text="Sair", command=self.root.quit, width=10, height=2, bg=orange_color, fg=text_color, relief=tk.RIDGE)
         quit_btn.place(x=920, y=990)
