@@ -7,7 +7,7 @@ import json
 from voc import parse_voc_annotation
 from yolo import create_yolov3_model, dummy_loss
 from generator import BatchGenerator
-from utils.utils import normalize, evaluate, makedirs
+from .utils.utils import normalize, evaluate, makedirs
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from keras.optimizers import Adam
 from callbacks import CustomModelCheckpoint, CustomTensorBoard
